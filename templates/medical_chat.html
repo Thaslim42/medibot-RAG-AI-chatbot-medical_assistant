@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Make the chat container a centered 16:9 box */
+        .chat-container {
+            width: 80vw;
+            height: 45vw;
+            max-width: 1280px;
+            max-height: 720px;
+            margin: 50px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Blurred background image */
+        .chat-container:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('static/images/smiling-pretty-woman-doctor-with-tablet.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        /* Header styling */
+        .chat-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            justify-content: center;  /* Center content horizontally */
+            position: relative;
+        }
+        .chat-header img {
+            width: 50px;  /* Set the width of the logo image */
+            height: 50px; /* Set the height of the logo image */
+            margin-right: 10px;
+            border-radius: 10px; /* Adds rounded edges to the logo */
+            object-fit: cover; 
+        }
+        /* Chat messages area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            max-height: 100%; 
+            left: 0;
+            right: 0;
+            top: 80px;  /* Adjust based on your header height */
+            bottom: 60px;
+        }
+
+        /* Message bubbles styling */
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+        }
+        .bot-message {
+            background: #C4DCEF;
+            float: left;
+            clear: both;
+            font-size: 22px;
+        }
+        .user-message {
+            background: #3498db;
+            color: white;
+            float: right;
+            clear: both;
+            font-size: 22px;
+        }
+        .user-message .user-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .bot-message .bot-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Input area styling */
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            display: flex;
+        }
+        #message-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+            background-color: #E8E8E8; 
+            color: black;
+            
+        }
+        #send-button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="static\images\OIP.jpg" alt="Nurse Logo" class="nurse-logo">
+            <span>YOUR MEDICAL ASSISTANT</span>
+            <button id="close-chat" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">&times;</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">
+                <img src="static/images/Designer (20).jpeg" class="bot-logo" alt="Bot Logo">
+                <span>Hello, I am your personal healthcare assistant. How can I help today?</span>
+            </div>
+        </div>
+        <div class="chat-input">
+            <img src="" 
+                class="" 
+                alt="">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chatMessages = document.getElementById('chat-messages');
+        const closeChatButton = document.getElementById('close-chat');
+        
+        // Add message to chat
+        function addMessage(message, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const imgSrc = isUser 
+                ? 'static/images/png-user-icon-icons-logos-emojis-users-2400.png' 
+                : 'static/images/Designer (20).jpeg';
+            const imgClass = isUser ? 'user-logo' : 'bot-logo';
+            const imgAlt = isUser ? 'User Logo' : 'Bot Logo';
+            
+            messageDiv.innerHTML = `
+                <img src="${imgSrc}" class="${imgClass}" alt="${imgAlt}">
+                <span>${message}</span>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message function
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, true);
+            messageInput.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+                addMessage(data.response, false);
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Sorry, there was an error processing your message.', false);
+            }
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Close chat function
+        closeChatButton.addEventListener('click', () => {
+            document.querySelector('.chat-container').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
