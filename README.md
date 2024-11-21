@@ -4,7 +4,7 @@ This project is a Medical Chatbot built using Retrieval-Augmented Generation (RA
 
 ![Screenshot](https://github.com/Thaslim42/medibot-RAG-AI-chatbot-medical_assistant/blob/main/Screenshot%202024-11-21%20162409.png?raw=true)
 
-![Screenshot](https://github.com/Thaslim42/medibot-RAG-AI-chatbot-medical_assistant/blob/main/Screenshot%202024-11-21%20162409.png?raw=true)
+![Screenshot](https://github.com/Thaslim42/medibot-RAG-AI-chatbot-medical_assistant/blob/main/Screenshot%202024-11-21%20162808.png?raw=true))
 
 **Backend:**
 Flask
