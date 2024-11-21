@@ -6,21 +6,16 @@ This project is a Medical Chatbot built using Retrieval-Augmented Generation (RA
 
 ![Screenshot](https://github.com/Thaslim42/medibot-RAG-AI-chatbot-medical_assistant/blob/main/Screenshot%202024-11-21%20162409.png?raw=true)
 
-Backend:
+**Backend:**
 Flask
 Langchain
 Groq
 Pinecone
 Python
 
-Frontend:
+**Frontend:**
 HTML/CSS
 JavaScript 
 
-Document Handling:
-Langchain Document Loaders
-Text Splitting
-
-Machine Learning/AI:
+**Ebeddings**
 OllamaEmbeddings
-Retrieval-Augmented Generation (RAG)
